@@ -12,25 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+define('SLDP_PLUGIN_PATH', __FILE__);
 
 
-function sldp_add_admin_menu()
-{
-    add_menu_page(
-        'Slider Pro',
-        'Slider Pro',
-        'manage_options',
-        'slider-pro',
-        'sldp_render_page',
-        'dashicons-slides',
-        100
-    );
-}
-
-add_action('admin_menu', 'sldp_add_admin_menu');
-
-
-function sldp_render_page()
-{
-    include_once plugin_dir_path(__FILE__) . 'templates/index.php';
-}
+require_once plugin_dir_path(SLDP_PLUGIN_PATH) . 'includes/init.php';

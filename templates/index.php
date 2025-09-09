@@ -1,6 +1,3 @@
-<div>
-    hello world :))
-
-    <p>this is from template</p>
+<div id="slider-pro-vue-app">
 
 </div>
