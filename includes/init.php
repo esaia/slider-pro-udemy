@@ -41,6 +41,11 @@ function sldp_enque_scripts($hook)
         null,
         true
     );
+
+    wp_enqueue_style(
+        'sldp-vue-styles',
+        plugin_dir_url(SLDP_PLUGIN_PATH) . 'dist/assets/index.css'
+    );
 }
 
 add_action('admin_enqueue_scripts', 'sldp_enque_scripts', 5);
