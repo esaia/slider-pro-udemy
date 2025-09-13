@@ -8,7 +8,11 @@ import Noir from "@/presets/Noir";
 const app = createApp(App);
 app.use(PrimeVue, {
   theme: {
-    preset: Noir
+    preset: Noir,
+    options: {
+      prefix: "p",
+      darkModeSelector: ".p-dark"
+    }
   }
 });
 
