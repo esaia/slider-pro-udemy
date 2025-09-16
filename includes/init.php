@@ -34,6 +34,9 @@ function sldp_enque_scripts($hook)
 
     if ($hook !== 'toplevel_page_slider-pro' || wp_script_is('sldp-vue-js', 'enqueued')) return;
 
+
+    wp_enqueue_media();
+
     wp_enqueue_script(
         'sldp-vue-js',
         plugin_dir_url(SLDP_PLUGIN_PATH) . 'dist/assets/index.js',
