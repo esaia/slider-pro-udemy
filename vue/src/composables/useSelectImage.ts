@@ -30,8 +30,6 @@ export function useSelectImage(multiple?: boolean) {
       } else {
         selectedImages.value = [selection[0]];
       }
-
-      console.log("selection ->> ", selection);
     });
 
     mediaFrame.open();
