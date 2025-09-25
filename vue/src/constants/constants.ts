@@ -1,0 +1,27 @@
+export const TRANSITIONS = [
+  { name: "Slide", value: "" },
+  { name: "Fade", value: "fade" },
+  { name: "Cube", value: "cube" },
+  { name: "Flip", value: "flip" },
+  { name: "Coverflow", value: "coverflow" },
+  { name: "Cards", value: "cards" },
+  { name: "Creative 1", value: "creative1" },
+  { name: "Creative 2", value: "creative2" }
+];
+
+export const DEVICES = ["desktop", "laptop", "tablet", "mobile"];
+
+export const CLICK_ACTIONS = [
+  { name: "LightBox", value: "lightbox" },
+  { name: "None", value: "none" }
+];
+
+export const ORDER_BY_OPTIONS = [
+  { name: "Drag & drop", value: "drag" },
+  { name: "Random", value: "random" }
+];
+
+export const DIRECTIONS = [
+  { name: "Horizontal", value: "horizontal" },
+  { name: "Vertical", value: "vertical" }
+];

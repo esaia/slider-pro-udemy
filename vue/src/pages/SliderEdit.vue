@@ -2,6 +2,7 @@
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import UploadImage from "@/components/form/UploadImage.vue";
+import SliderSettingTabs from "@/components/UI/SliderSettingTabs.vue";
 </script>
 <template>
   <div class="space-y-6">
@@ -26,5 +27,7 @@ import UploadImage from "@/components/form/UploadImage.vue";
 
       <UploadImage class="p-4" />
     </div>
+
+    <SliderSettingTabs />
   </div>
 </template>

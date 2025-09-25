@@ -29,7 +29,9 @@ const initializeSwapy = () => {
   });
 
   swapyInstance.onSwapEnd((e) => {
-    data.value = Object.values(e.slotItemMap.asObject);
+    setTimeout(() => {
+      data.value = Object.values(e.slotItemMap.asObject);
+    }, 500);
   });
 };
 
