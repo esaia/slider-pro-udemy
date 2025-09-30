@@ -25,3 +25,17 @@ export const DIRECTIONS = [
   { name: "Horizontal", value: "horizontal" },
   { name: "Vertical", value: "vertical" }
 ];
+
+export const ORIENTATION = [
+  { name: "Right to left", value: false },
+  { name: "Left to right", value: true }
+];
+
+export const PAGINATION_STYLES = [
+  { name: "Bullets", value: "bullets" },
+  { name: "Dynamic", value: "dynamic" },
+  { name: "Scrollbar", value: "scrollbar" },
+  { name: "Fraction", value: "fraction" }
+];
+
+export const ALL_DIRECTIONS = ["top", "right", "down", "left"] as const;
