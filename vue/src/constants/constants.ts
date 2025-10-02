@@ -9,7 +9,7 @@ export const TRANSITIONS = [
   { name: "Creative 2", value: "creative2" }
 ];
 
-export const DEVICES = ["desktop", "laptop", "tablet", "mobile"];
+export const DEVICES = ["desktop", "laptop", "tablet", "mobile"] as const;
 
 export const CLICK_ACTIONS = [
   { name: "LightBox", value: "lightbox" },
