@@ -15,4 +15,13 @@ if (!defined('ABSPATH')) {
 define('SLDP_PLUGIN_PATH', __FILE__);
 
 
+function dd($data)
+{
+
+    error_log(print_r($data, true));
+    die();
+}
+
+
+require_once plugin_dir_path(SLDP_PLUGIN_PATH) . 'includes/migrations.php';
 require_once plugin_dir_path(SLDP_PLUGIN_PATH) . 'includes/init.php';
