@@ -5,6 +5,7 @@ import Column from "primevue/column";
 import InputText from "primevue/inputtext";
 import Dialog from "primevue/dialog";
 import { ref } from "vue";
+import axios from "axios";
 
 const sliders = [
   {
@@ -26,6 +27,22 @@ const sliders = [
 
 const isCreateModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
+
+const handleCreateSlider = async () => {
+  // SEND CREATE SLIDER REQUEST
+  axios.post(
+    sliderPro.ajax_url,
+    {
+      action: "foobar"
+    },
+    {
+      withCredentials: true,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+      }
+    }
+  );
+};
 </script>
 <template>
   <div>
@@ -54,10 +71,10 @@ const isDeleteModalOpen = ref(false);
     </DataTable>
 
     <Dialog v-model:visible="isCreateModalOpen" modal header="Create Slider" :style="{ width: '25rem' }">
-      <div>
+      <form @submit.prevent="handleCreateSlider">
         <InputText placeholder="title" class="w-full" />
-        <Button label="Create" class="mt-4 w-full" />
-      </div>
+        <Button label="Create" class="mt-4 w-full" type="submit" />
+      </form>
     </Dialog>
 
     <Dialog v-model:visible="isDeleteModalOpen" modal header="Delete Slider" :style="{ width: '25rem' }">

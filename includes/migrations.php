@@ -19,6 +19,7 @@ function sldp_create_tables()
     $sliders_sql = "CREATE TABLE $sliders_table (
         id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
         title varchar(255) NOT NULL,
+        slides JSON,
         created_at datetime DEFAULT CURRENT_TIMESTAMP,
         updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY (id)

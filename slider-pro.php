@@ -25,3 +25,7 @@ function dd($data)
 
 require_once plugin_dir_path(SLDP_PLUGIN_PATH) . 'includes/migrations.php';
 require_once plugin_dir_path(SLDP_PLUGIN_PATH) . 'includes/init.php';
+
+
+// Controllers
+require_once plugin_dir_path(SLDP_PLUGIN_PATH) . 'includes/controller/SliderController.php';

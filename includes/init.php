@@ -49,6 +49,10 @@ function sldp_enque_scripts($hook)
         'sldp-vue-styles',
         plugin_dir_url(SLDP_PLUGIN_PATH) . 'dist/assets/index.css'
     );
+
+    wp_localize_script('sldp-vue-js', 'sliderPro', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+    ));
 }
 
 add_action('admin_enqueue_scripts', 'sldp_enque_scripts', 5);

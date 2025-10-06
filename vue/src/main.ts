@@ -21,4 +21,6 @@ app.use(PrimeVue, {
   }
 });
 
+app.config.globalProperties.sliderPro = sliderPro;
+
 app.mount("#slider-pro-vue-app");
