@@ -33,6 +33,7 @@ const handleCreateSlider = async () => {
   axios.post(
     sliderPro.ajax_url,
     {
+      nonce: sliderPro.nonce,
       action: "foobar"
     },
     {
