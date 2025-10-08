@@ -8,10 +8,14 @@ if (!defined('ABSPATH')) {
 
 class SldpSliderAjaxHandler
 {
+
+    private $wpdb;
+
     public function __construct()
     {
-
-        add_action('wp_ajax_foobar', [$this, 'my_ajax_foobar_handler']);
+        global $wpdb;
+        $this->wpdb = $wpdb;
+        add_action('wp_ajax_sldp_create_slider', [$this, 'create_slider']);
     }
 
 
@@ -24,12 +28,31 @@ class SldpSliderAjaxHandler
         return true;
     }
 
-    public function my_ajax_foobar_handler()
+    private function validate_slider_data()
+    {
+
+        $title = sanitize_text_field($_POST['title'] ?? '');
+        $slides = wp_unslash($_POST['slides'] ?? []);
+
+        if (empty($title)) {
+            wp_send_json_error('Title is required');
+        }
+
+        $slides = wp_json_encode($slides);
+
+        return compact('title', 'slides');
+    }
+
+    public function create_slider()
     {
 
         $this->verify_request();
 
-        wp_send_json_success('success');
+        $data = $this->validate_slider_data();
+
+        $insertedId = $this->wpdb->insert('wp_sldp_sliders', $data);
+
+        wp_send_json_success('success ' . $insertedId);
     }
 }
 

@@ -27,22 +27,40 @@ const sliders = [
 
 const isCreateModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
+const title = ref("");
+const errorMsg = ref("");
+const loading = ref(false);
 
 const handleCreateSlider = async () => {
-  // SEND CREATE SLIDER REQUEST
-  axios.post(
-    sliderPro.ajax_url,
-    {
-      nonce: sliderPro.nonce,
-      action: "foobar"
-    },
-    {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+  errorMsg.value = "";
+
+  if (loading.value) return;
+
+  loading.value = true;
+
+  try {
+    await axios.post(
+      sliderPro.ajax_url,
+      {
+        nonce: sliderPro.nonce,
+        action: "sldp_create_slider",
+        title: title.value
+      },
+      {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+        }
       }
-    }
-  );
+    );
+
+    title.value = "";
+    isCreateModalOpen.value = false;
+  } catch (error) {
+    errorMsg.value = "Something went wrong!";
+  }
+
+  loading.value = false;
 };
 </script>
 <template>
@@ -73,8 +91,9 @@ const handleCreateSlider = async () => {
 
     <Dialog v-model:visible="isCreateModalOpen" modal header="Create Slider" :style="{ width: '25rem' }">
       <form @submit.prevent="handleCreateSlider">
-        <InputText placeholder="title" class="w-full" />
+        <InputText v-model="title" placeholder="title" class="w-full" />
         <Button label="Create" class="mt-4 w-full" type="submit" />
+        <p v-if="errorMsg" class="p-2 font-semibold text-red-500">{{ errorMsg }}</p>
       </form>
     </Dialog>
 
