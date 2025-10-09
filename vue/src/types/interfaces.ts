@@ -58,3 +58,18 @@ interface Nonces {
   delete: string;
   edit: string;
 }
+
+export interface SlidersDataInterface {
+  data: Slider[];
+  page: number;
+  per_page: number;
+  total: number;
+}
+
+export interface Slider {
+  id: number;
+  title: string;
+  slides: string[];
+  created_at: string;
+  updated_at: string;
+}

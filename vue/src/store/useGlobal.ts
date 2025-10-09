@@ -1,7 +1,10 @@
+import type { SlidersDataInterface } from "@/types/interfaces";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useGlobalStore = defineStore("global", () => {
+  const sliders = ref<SlidersDataInterface>();
+
   const metaData = ref({
     // General settings
     slideEffect: "",
@@ -36,5 +39,15 @@ export const useGlobalStore = defineStore("global", () => {
     paginationMargin: { top: "0", right: "0", down: "0", left: "0" }
   });
 
-  return { metaData };
+  const setSliders = (slidersParam: SlidersDataInterface) => {
+    sliders.value = slidersParam;
+  };
+
+  return {
+    // State
+    metaData,
+    sliders,
+    // Setters
+    setSliders
+  };
 });

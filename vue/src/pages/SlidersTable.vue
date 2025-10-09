@@ -5,31 +5,42 @@ import Column from "primevue/column";
 import InputText from "primevue/inputtext";
 import Dialog from "primevue/dialog";
 import { ref } from "vue";
-import axios from "axios";
+import ajaxAxios from "@/utils/axios";
+import { useGlobalStore } from "@/store/useGlobal";
+import { storeToRefs } from "pinia";
+import { PER_PAGE } from "@/constants/constants";
 
-const sliders = [
-  {
-    title: "slider",
-    shortcode: '[slider-pro id="48"]',
-    created_at: "12 september"
-  },
-  {
-    title: "slider",
-    shortcode: '[slider-pro id="48"]',
-    created_at: "12 september"
-  },
-  {
-    title: "slider",
-    shortcode: '[slider-pro id="48"]',
-    created_at: "12 september"
-  }
-];
+const emit = defineEmits<{
+  (e: "fetchSliders", page: number): void;
+}>();
+
+const globalStore = useGlobalStore();
+const { sliders } = storeToRefs(globalStore);
+
+// const sliders = [
+//   {
+//     title: "slider",
+//     shortcode: '[slider-pro id="48"]',
+//     created_at: "12 september"
+//   },
+//   {
+//     title: "slider",
+//     shortcode: '[slider-pro id="48"]',
+//     created_at: "12 september"
+//   },
+//   {
+//     title: "slider",
+//     shortcode: '[slider-pro id="48"]',
+//     created_at: "12 september"
+//   }
+// ];
 
 const isCreateModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
 const title = ref("");
 const errorMsg = ref("");
 const loading = ref(false);
+const first = ref();
 
 const handleCreateSlider = async () => {
   errorMsg.value = "";
@@ -39,20 +50,11 @@ const handleCreateSlider = async () => {
   loading.value = true;
 
   try {
-    await axios.post(
-      sliderPro.ajax_url,
-      {
-        nonce: sliderPro.nonce,
-        action: "sldp_create_slider",
-        title: title.value
-      },
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-        }
-      }
-    );
+    await ajaxAxios.post("", {
+      nonce: sliderPro.nonce,
+      action: "sldp_create_slider",
+      title: title.value
+    });
 
     title.value = "";
     isCreateModalOpen.value = false;
@@ -62,6 +64,13 @@ const handleCreateSlider = async () => {
 
   loading.value = false;
 };
+
+const handlePageChange = (e: any) => {
+  console.log("e", e);
+  first.value = e.first;
+
+  emit("fetchSliders", e.page + 1);
+};
 </script>
 <template>
   <div>
@@ -70,12 +79,22 @@ const handleCreateSlider = async () => {
       <Button label="Add slider" class="w-fit" @click="isCreateModalOpen = true" />
     </div>
 
-    <DataTable :value="sliders" tableStyle="min-width: 50rem">
+    <DataTable
+      v-if="sliders?.data.length"
+      v-model:first="first"
+      :value="sliders?.data"
+      :paginator="sliders.total > sliders.per_page"
+      :rows="PER_PAGE"
+      :totalRecords="sliders.total"
+      tableStyle="min-width: 50rem"
+      lazy
+      @page="handlePageChange"
+    >
       <Column field="title" header="Title"></Column>
 
       <Column field="shortcode" header="Shortcode">
         <template #body="slotProps">
-          <InputText type="text" :value="slotProps.data.shortcode" />
+          <InputText type="text" :value="`[slider-pro id='${slotProps.data.id}']`" />
         </template>
       </Column>
 
