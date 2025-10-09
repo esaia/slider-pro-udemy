@@ -10,20 +10,36 @@ class SldpSliderAjaxHandler
 {
 
     private $wpdb;
+    private $sliders_table;
+    private $slider_metas_table;
 
     public function __construct()
     {
         global $wpdb;
         $this->wpdb = $wpdb;
+
+        $this->sliders_table = $wpdb->prefix . 'sldp_sliders';
+        $this->slider_metas_table = $wpdb->prefix . 'sldp_slider_metas';
+
         add_action('wp_ajax_sldp_create_slider', [$this, 'create_slider']);
         add_action('wp_ajax_sldp_get_sliders', [$this, 'get_Sliders']);
+    }
+
+    private function send_error($message, $code = 400)
+    {
+        wp_send_json_error(['message' => $message], $code);
+    }
+
+    private function send_success($data)
+    {
+        wp_send_json_success($data);
     }
 
 
     private function verify_request($action = 'slider_pro_nonce')
     {
         if (!wp_verify_nonce($_POST['nonce'] ?? '', $action)) {
-            wp_send_json_error('Security check failed', 403);
+            $this->send_error('Security check failed', 403);
         }
 
         return true;
@@ -36,7 +52,7 @@ class SldpSliderAjaxHandler
         $slides = wp_unslash($_POST['slides'] ?? []);
 
         if (empty($title)) {
-            wp_send_json_error('Title is required');
+            $this->send_error('Title is required');
         }
 
         $slides = wp_json_encode($slides);
@@ -64,9 +80,9 @@ class SldpSliderAjaxHandler
 
         $data = $this->validate_slider_data();
 
-        $insertedId = $this->wpdb->insert('wp_sldp_sliders', $data);
+        $this->wpdb->insert($this->sliders_table, $data);
 
-        wp_send_json_success('success ' . $insertedId);
+        $this->send_success('Slider created successfully');
     }
 
     public function get_Sliders()
@@ -78,7 +94,14 @@ class SldpSliderAjaxHandler
         $offset = ($page - 1) * $perPage;
 
 
-        $count = $this->wpdb->get_var("SELECT count(*) FROM wp_sldp_sliders");
+        $params = [$perPage, $offset];
+
+        $count = $this->wpdb->get_var("SELECT count(*) FROM $this->sliders_table");
+
+        $query = "SELECT * FROM wp_sldp_sliders LIMIT %d OFFSET %d";
+
+        $data = $this->wpdb->get_results($this->wpdb->prepare($query, ...$params));
+
 
         $data = $this->wpdb->get_results("SELECT * FROM wp_sldp_sliders LIMIT $perPage OFFSET $offset");
 
@@ -87,13 +110,13 @@ class SldpSliderAjaxHandler
 
         $data = [
             'data'           => $data,
-            'total'          => (int)$count,
+            'total'          => (int) $count,
             'per_page'       => $perPage,
             'page'           => $page,
             'total_pages'    => ceil($count / $perPage),
         ];
 
-        wp_send_json_success($data);
+        $this->send_success($data);
     }
 }
 
