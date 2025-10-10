@@ -53,6 +53,7 @@ function sldp_enque_scripts($hook)
     wp_localize_script('sldp-vue-js', 'sliderPro', array(
         'nonce' => wp_create_nonce('slider_pro_nonce'),
         'ajax_url' => admin_url('admin-ajax.php'),
+        'plugin_url' => SLDP_PLUGIN_URL,
     ));
 }
 

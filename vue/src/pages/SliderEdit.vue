@@ -3,16 +3,28 @@ import InputText from "primevue/inputtext";
 import Button from "primevue/button";
 import UploadImage from "@/components/form/UploadImage.vue";
 import SliderSettingTabs from "@/components/UI/SliderSettingTabs.vue";
+import { useGlobalStore } from "@/store/useGlobal";
+import { storeToRefs } from "pinia";
+import { ref } from "vue";
+
+const globalStore = useGlobalStore();
+const { activeSlider } = storeToRefs(globalStore);
+
+const title = ref(activeSlider.value?.title || "");
 </script>
 <template>
-  <div class="space-y-6">
-    <Button label="Back to sliders list" variant="link" class="mb-2 w-fit !p-0" />
+  <div v-if="!activeSlider">Slider not found <a :href="sliderPro.plugin_url">go back</a></div>
+
+  <div v-else class="space-y-6">
+    <a :href="sliderPro.plugin_url">
+      <Button label="Back to sliders list" variant="link" class="mb-2 w-fit !p-0" />
+    </a>
 
     <div class="flex items-center gap-3">
-      <InputText placeholder="title" class="w-full" />
+      <InputText v-model="title" placeholder="title" class="w-full" />
 
       <span>Shortcode:</span>
-      <InputText placeholder="title" value="[slider-pro id='1']" />
+      <InputText :value="`[slider-pro id='${activeSlider?.id}']`" />
 
       <Button label="Save" class="w-32" />
     </div>

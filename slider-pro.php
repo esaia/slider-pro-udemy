@@ -13,6 +13,7 @@ if (!defined('ABSPATH')) {
 }
 
 define('SLDP_PLUGIN_PATH', __FILE__);
+define('SLDP_PLUGIN_URL', admin_url('admin.php?page=slider-pro'));
 
 
 function dd($data)

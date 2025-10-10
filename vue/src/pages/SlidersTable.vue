@@ -133,7 +133,10 @@ const handlePageChange = (e: any) => {
 
       <Column header="Actions">
         <template #body="slotProps">
-          <Button label="Open" variant="text" size="small" />
+          <a :href="`${sliderPro.plugin_url}&slider=${slotProps.data.id}`">
+            <Button label="Open" variant="text" size="small" />
+          </a>
+
           <Button
             label="Delete"
             variant="text"

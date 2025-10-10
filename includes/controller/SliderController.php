@@ -22,8 +22,9 @@ class SldpSliderAjaxHandler
         $this->slider_metas_table = $wpdb->prefix . 'sldp_slider_metas';
 
         add_action('wp_ajax_sldp_create_slider', [$this, 'create_slider']);
-        add_action('wp_ajax_sldp_delete_slider', [$this, 'delete_Sliders']);
-        add_action('wp_ajax_sldp_get_sliders', [$this, 'get_Sliders']);
+        add_action('wp_ajax_sldp_delete_slider', [$this, 'delete_sliders']);
+        add_action('wp_ajax_sldp_get_sliders', [$this, 'get_sliders']);
+        add_action('wp_ajax_sldp_get_slider', [$this, 'get_slider']);
     }
 
     private function send_error($message, $code = 400)
@@ -86,7 +87,7 @@ class SldpSliderAjaxHandler
         $this->send_success('Slider created successfully');
     }
 
-    public function delete_Sliders()
+    public function delete_sliders()
     {
         $slider_id = absint($_POST['id'] ?? 0);
 
@@ -100,7 +101,7 @@ class SldpSliderAjaxHandler
     }
 
 
-    public function get_Sliders()
+    public function get_sliders()
     {
         $this->verify_request();
 
@@ -118,9 +119,6 @@ class SldpSliderAjaxHandler
         $data = $this->wpdb->get_results($this->wpdb->prepare($query, ...$params));
 
 
-        $data = $this->wpdb->get_results("SELECT * FROM wp_sldp_sliders ORDER BY created_at DESC LIMIT $perPage OFFSET $offset");
-
-
         $data = array_map([$this, 'map_slider_data'], $data);
 
         $data = [
@@ -130,6 +128,24 @@ class SldpSliderAjaxHandler
             'page'           => $page,
             'total_pages'    => ceil($count / $perPage),
         ];
+
+        $this->send_success($data);
+    }
+
+    public function get_slider()
+    {
+        $this->verify_request();
+        $slider_id = absint($_POST['id'] ?? 0);
+
+        $sql = "SELECT * FROM $this->sliders_table WHERE id = %d";
+
+        $data = $this->wpdb->get_row($this->wpdb->prepare($sql, $slider_id), ARRAY_A);
+
+        if (!$data) {
+            $this->send_error('Slider not found!');
+        }
+
+        $data = $this->map_slider_data($data);
 
         $this->send_success($data);
     }

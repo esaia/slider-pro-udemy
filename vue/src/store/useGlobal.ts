@@ -1,10 +1,10 @@
-import type { SlidersDataInterface } from "@/types/interfaces";
+import type { Slider, SlidersDataInterface } from "@/types/interfaces";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
 export const useGlobalStore = defineStore("global", () => {
   const sliders = ref<SlidersDataInterface>();
-
+  const activeSlider = ref<Slider>();
   const metaData = ref({
     // General settings
     slideEffect: "",
@@ -43,11 +43,17 @@ export const useGlobalStore = defineStore("global", () => {
     sliders.value = slidersParam;
   };
 
+  const setActiveSlider = (slider: Slider) => {
+    activeSlider.value = slider;
+  };
+
   return {
     // State
-    metaData,
     sliders,
+    activeSlider,
+    metaData,
     // Setters
-    setSliders
+    setSliders,
+    setActiveSlider
   };
 });
