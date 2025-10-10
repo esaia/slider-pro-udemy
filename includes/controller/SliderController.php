@@ -22,6 +22,7 @@ class SldpSliderAjaxHandler
         $this->slider_metas_table = $wpdb->prefix . 'sldp_slider_metas';
 
         add_action('wp_ajax_sldp_create_slider', [$this, 'create_slider']);
+        add_action('wp_ajax_sldp_delete_slider', [$this, 'delete_Sliders']);
         add_action('wp_ajax_sldp_get_sliders', [$this, 'get_Sliders']);
     }
 
@@ -85,6 +86,20 @@ class SldpSliderAjaxHandler
         $this->send_success('Slider created successfully');
     }
 
+    public function delete_Sliders()
+    {
+        $slider_id = absint($_POST['id'] ?? 0);
+
+        if (empty($slider_id)) {
+            $this->send_error('Slider id is required');
+        }
+
+        $this->wpdb->delete($this->sliders_table, ['id' => $slider_id]);
+
+        $this->send_success('Slider deleted successfully');
+    }
+
+
     public function get_Sliders()
     {
         $this->verify_request();
@@ -103,7 +118,7 @@ class SldpSliderAjaxHandler
         $data = $this->wpdb->get_results($this->wpdb->prepare($query, ...$params));
 
 
-        $data = $this->wpdb->get_results("SELECT * FROM wp_sldp_sliders LIMIT $perPage OFFSET $offset");
+        $data = $this->wpdb->get_results("SELECT * FROM wp_sldp_sliders ORDER BY created_at DESC LIMIT $perPage OFFSET $offset");
 
 
         $data = array_map([$this, 'map_slider_data'], $data);

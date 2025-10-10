@@ -41,6 +41,13 @@ const title = ref("");
 const errorMsg = ref("");
 const loading = ref(false);
 const first = ref();
+const activeSliderId = ref();
+const page = ref(1);
+
+const handleClickDeleteBtn = (id: number) => {
+  isDeleteModalOpen.value = true;
+  activeSliderId.value = id;
+};
 
 const handleCreateSlider = async () => {
   errorMsg.value = "";
@@ -58,6 +65,31 @@ const handleCreateSlider = async () => {
 
     title.value = "";
     isCreateModalOpen.value = false;
+    emit("fetchSliders", page.value);
+  } catch (error) {
+    errorMsg.value = "Something went wrong!";
+  }
+
+  loading.value = false;
+};
+
+const handleDeleteSlider = async () => {
+  errorMsg.value = "";
+
+  if (loading.value) return;
+
+  loading.value = true;
+
+  try {
+    await ajaxAxios.post("", {
+      nonce: sliderPro.nonce,
+      action: "sldp_delete_slider",
+      id: activeSliderId.value
+    });
+
+    isDeleteModalOpen.value = false;
+
+    emit("fetchSliders", page.value);
   } catch (error) {
     errorMsg.value = "Something went wrong!";
   }
@@ -66,10 +98,9 @@ const handleCreateSlider = async () => {
 };
 
 const handlePageChange = (e: any) => {
-  console.log("e", e);
   first.value = e.first;
-
-  emit("fetchSliders", e.page + 1);
+  page.value = e.page + 1;
+  emit("fetchSliders", page.value);
 };
 </script>
 <template>
@@ -101,9 +132,15 @@ const handlePageChange = (e: any) => {
       <Column field="created_at" header="Date"></Column>
 
       <Column header="Actions">
-        <template #body>
+        <template #body="slotProps">
           <Button label="Open" variant="text" size="small" />
-          <Button label="Delete" variant="text" size="small" severity="danger" @click="isDeleteModalOpen = true" />
+          <Button
+            label="Delete"
+            variant="text"
+            size="small"
+            severity="danger"
+            @click="handleClickDeleteBtn(slotProps.data.id)"
+          />
         </template>
       </Column>
     </DataTable>
@@ -118,8 +155,9 @@ const handlePageChange = (e: any) => {
 
     <Dialog v-model:visible="isDeleteModalOpen" modal header="Delete Slider" :style="{ width: '25rem' }">
       <div>
-        <p>Are you sure to delete slider with id ?</p>
-        <Button label="Delete" class="mt-4 w-full" severity="danger" />
+        <p>Are you sure to delete slider with id {{ activeSliderId }}?</p>
+        <Button label="Delete" class="mt-4 w-full" severity="danger" @click="handleDeleteSlider" />
+        <p v-if="errorMsg" class="p-2 font-semibold text-red-500">{{ errorMsg }}</p>
       </div>
     </Dialog>
   </div>
